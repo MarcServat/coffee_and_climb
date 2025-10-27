@@ -1,0 +1,29 @@
+services:
+  app:
+    ports:
+      - "8000:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-app
+    container_name: laravel-app
+
+    restart: unless-stopped
+    working_dir: /www/coffee_and_climb
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    volumes:
+      - ./src:/www/coffee_and_climb
+
+  xampp:
+    image: tomsik68/xampp
+    container_name: xampp
+    ports:
+      - "8080:80"
+      - "3306:3306"
+    volumes:
+      - ./src:/www/coffee_and_climb
+      - db_data:/opt/lampp/var/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
