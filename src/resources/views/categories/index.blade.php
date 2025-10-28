@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Categories</title>
-</head>
-<body>
+@extends('layouts.app')
+
+@section('title', '$categories')
+
+@section('content')
 <h1>Categories</h1>
 
 <ul>
     @foreach($categories as $category)
-        <li><a href="{{ route($category->name.join("_")) }}">{{ $category->name }}</a></li>
+        <li>
+            <a href="{{ route('categories.index') . '/' . Str::slug($category->name) }}">
+                {{ $category->name }}
+            </a>
+        </li>
     @endforeach
 </ul>
-</body>
-</html>
+@endsection
