@@ -1,0 +1,19 @@
+{
+    "tailwindConfig": "./tailwind.config.js",
+    "plugins": [
+        "./node_modules/prettier-plugin-blade/plugin.js",
+        "./node_modules/prettier-plugin-tailwindcss/dist/index.mjs"
+    ],
+    "useTabs": false,
+    "tabWidth": 2,
+    "overrides": [
+        {
+            "files": [
+                "*.blade.php"
+            ],
+            "options": {
+                "parser": "blade"
+            }
+        }
+    ]
+}

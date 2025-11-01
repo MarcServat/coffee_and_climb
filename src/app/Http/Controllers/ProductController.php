@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($categoryId)
     {
-        $categories = Category::all();
+        $products = Category::with('products')->findOrFail($categoryId)->products;
+        $category = Category::all()->findOrFail($categoryId);
 
-        return view('categories.index', compact('categories'));
+        return view('products.index', compact('products', 'category'));
     }
 
     /**
@@ -38,7 +39,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $category = Category::all()->findOrFail($category->name);
+
+        return view('categories.show', compact('category'));
     }
 
     /**
