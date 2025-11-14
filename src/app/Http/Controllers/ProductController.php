@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -15,7 +16,7 @@ class ProductController extends Controller
         $products = Category::with('products')->findOrFail($categoryId)->products;
         $category = Category::all()->findOrFail($categoryId);
 
-        return view('products.index', compact('products', 'category'));
+        return view('products.index', compact('category', 'products'));
     }
 
     /**
@@ -37,11 +38,12 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show($categoryId, $productId)
     {
-        $category = Category::all()->findOrFail($category->name);
+        $category = Category::findOrFail($categoryId);
+        $product = $category->products()->findOrFail($productId);
 
-        return view('categories.show', compact('category'));
+        return view('products.show', compact('category', 'product'));
     }
 
     /**

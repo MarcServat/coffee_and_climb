@@ -10,3 +10,11 @@
     "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+.btn-primary {
+  @apply bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 cursor-pointer;
+}
+
+.text-xxl {
+  @apply text-2xl md:text-3xl font-bold;
+}

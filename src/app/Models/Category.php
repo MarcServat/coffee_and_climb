@@ -8,7 +8,7 @@ class Category extends Model
 {
     protected $table = 'categories';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['id','name'];
 
     // A category has many products
     public function products()

@@ -22,8 +22,8 @@
         @endforeach
       </ul>
       <a
-        class="cursor-pointer p-1 transition-colors duration-200 hover:bg-indigo-600"
-        {{-- href="{{ route('cart.index') }}" --}}
+        class="cursor-pointer p-1 transition-colors duration-200 hover:bg-indigo-800"
+        href="{{ route('cart.index') }}"
       >
         <x-bi-cart-fill />
       </a>

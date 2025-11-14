@@ -9,7 +9,7 @@
         <li>
           <a
             class="flex items-center p-2"
-            href="{{ route("categories.index") . "/category/" . $category->id }}"
+            href="{{ route("products.index", [$category->id]) }}"
           >
             <img
               width="200px"
