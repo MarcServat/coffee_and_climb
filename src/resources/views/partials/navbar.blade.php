@@ -21,8 +21,20 @@
           </li>
         @endforeach
       </ul>
+        @guest
+            <a href="{{ route('login.index') }}" class="text-sm font-medium text-gray-600 hover:text-indigo-600">Login</a>
+        @endguest
+        @auth
+            <div class="flex flex-col items-center space-x-4">
+                <span class="text-sm text-gray-700">{{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST" class="text-center">
+                    @csrf
+                    <button type="submit" class="cursor-pointer text-sm text-gray-600 hover:text-indigo-800 underline">Logout</button>
+                </form>
+            </div>
+        @endauth
       <a
-        class="cursor-pointer p-1 transition-colors duration-200 hover:bg-indigo-800"
+        class="cursor-pointer p-2 transition-colors duration-200 rounded-2xl hover:bg-indigo-300"
         href="{{ route('cart.index') }}"
       >
         <x-bi-cart-fill />

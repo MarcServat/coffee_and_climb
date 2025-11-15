@@ -1,59 +1,49 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display admin orders list (requires admin session flag).
      */
-    public function index() {}
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function index(Request $request) {
+        if (!$request->session()->get('is_admin')) {
+            return redirect()->route('admin.login');
+        }
+        $orders = Order::with('user')->orderByDesc('id')->paginate(25);
+        return view('admin.index', compact('orders'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display a single order detail.
      */
-    public function store(Request $request)
-    {
-        //
+    public function show(Request $request, $orderId) {
+        if (!$request->session()->get('is_admin')) {
+            return redirect()->route('admin.login');
+        }
+        $order = Order::with('items.product','user')->findOrFail($orderId);
+        return view('admin.show', compact('order'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
+    public function authenticate(Request $request)
     {
-        //
-    }
+        $data = $request->validate([
+            'username' => ['required'],
+            'password' => ['required'],
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Category $category)
-    {
-        //
-    }
+        $config = config('admin');
+        if ($data['username'] === $config['username'] && Hash::check($data['password'], $config['password_hash'])) {
+            $request->session()->put('is_admin', true);
+            return redirect()->route('admin.dashboard');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
-        //
+        return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
     }
 }

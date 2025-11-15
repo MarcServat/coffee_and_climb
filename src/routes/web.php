@@ -1,14 +1,25 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::get('/admin', [AdminAuthController::class, 'showLogin'])->name('admin.auth.index');
 
+Route::post('/admin', [AdminAuthController::class, 'authenticate'])->name('admin.auth.login');
+
+Route::get('/admin/orders', [AdminController::class, 'index'])->name('admin.index');
+
+Route::get('/admin/{orderId}', [AdminController::class, 'show'])->name('admin.show');
+
+// Home
 Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
 
 // Categories
@@ -34,3 +45,18 @@ Route::get('/order/create', [OrderController::class, 'create'])->name('order.cre
 Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 
 Route::get('/order/{orderId}', [OrderController::class, 'show'])->name('order.show');
+
+// Login
+Route::get('/login', [LoginController::class, 'index'])->name('login.index');
+
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
+
+// Logout
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');

@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use function Psy\debug;
 
 class OrderController extends Controller
 {
@@ -33,7 +37,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-
         $cart = session('cart', []);
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
@@ -45,26 +48,48 @@ class OrderController extends Controller
         }
 
         if (Auth::check()) {
-            // Registered user
+            $user = User::find(Auth::id());
             $order = Order::create([
                 'user_id' => Auth::id(),
+                'email' => $user->email,
                 'shipping_address' => $request->input('shipping_address', Auth::user()->address),
                 'status' => 'pending',
                 'total' => $total,
             ]);
         } else {
-            // Guest user
-            $request->validate([
-                'guest_email' => 'required|email',
-                'guest_address' => 'required|string',
-            ]);
-            $order = Order::create([
-                'guest_email' => $request->input('guest_email'),
-                'guest_address' => $request->input('guest_address'),
-                'shipping_address' => $request->input('guest_address'),
-                'status' => 'pending',
-                'total' => $total,
-            ]);
+
+            $mode = $request->input('guest_email') ? 'guest' : 'register';
+            if ($mode === 'register') {
+                $request->validate([
+                    'user_email' => 'required|email',
+                    'user_address' => 'required|string',
+                ]);
+
+                $user = User::create([
+                    'name' => $request->input('user_name'),
+                    'email' => $request->input('user_email'),
+                    'password' => Hash::make($request->input('user_password')),
+                    'address' => $request->input('user_address'),
+                ]);
+                $order = Order::create([
+                    'user_id' => $user->id,
+                    'shipping_address' => $request->input('user_address'),
+                    'status' => 'pending',
+                    'total' => $total,
+                ]);
+                Auth::login($user);
+            } else {
+                $request->validate([
+                    'guest_email' => 'required|email',
+                    'guest_address' => 'required|string',
+                ]);
+                $order = Order::create([
+                    'email' => $request->input('guest_email'),
+                    'shipping_address' => $request->input('guest_address'),
+                    'status' => 'pending',
+                    'total' => $total,
+                ]);
+            }
         }
 
         foreach ($products as $product) {

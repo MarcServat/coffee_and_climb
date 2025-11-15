@@ -11,7 +11,7 @@
             <strong>Name:</strong> {{ $order->user->name }}<br>
             <strong>Email:</strong> {{ $order->user->email }}<br>
         @else
-            <strong>Email:</strong> {{ $order->guest_email }}<br>
+            <strong>Email:</strong> {{ $order->email }}<br>
         @endif
         <strong>Shipping Address:</strong> {{ $order->shipping_address }}<br>
         <strong>Status:</strong> {{ ucfirst($order->status) }}<br>
