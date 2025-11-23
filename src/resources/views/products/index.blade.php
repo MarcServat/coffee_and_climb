@@ -17,13 +17,13 @@
             <div
               class="pointer-events-auto flex justify-center gap-6 rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-xl"
             >
+                {{Log::info(asset("images/" . Str::slug($category->name) . "/" . Str::slug($product->name)) . ".webp")}}
               <div class="flex flex-shrink-0 items-center justify-center">
                 <img
-                  width="200px"
-                  height="100px"
-                  class="mx-auto object-contain"
-                  src="{{ asset("images/" . Str::slug($category->name) . "/" . Str::slug($product->name)) . ".webp" }}"
-                  alt="{{ $product->name }}"
+                    width="200px"
+                    height="200px"
+                    src="{{ asset("images/" . Str::slug($category->name) . "/" . Str::slug($product->name)) . ".webp" }}"
+                    alt="{{ $product->name }}"
                 />
               </div>
               <div class="ml-6 flex flex-col justify-center">

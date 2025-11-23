@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AdminAuthController extends Controller
 {
@@ -19,7 +20,7 @@ class AdminAuthController extends Controller
         ]);
 
         $config = config('admin');
-        if ($data['username'] === $config['username'] && $data['password'] === $config['password']) {
+        if ($data['username'] === $config['username'] && Hash::check($data['password'],  $config['password'])) {
             $request->session()->put('is_admin', true);
             return redirect()->route('admin.index');
         }
